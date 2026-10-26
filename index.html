@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>몽글몽글 반려 친구</title>
+<link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+<style>
+:root{--cream:#fff6ea;--pink:#ffc8dc;--lav:#d9ccff;--sky:#c6e6ff;--yel:#fff0b3;--ink:#5a4a6b;--card:rgba(255,255,255,.82);--sh:0 10px 30px rgba(170,140,200,.25);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--cream:#2a2545;--pink:#5b3b63;--lav:#3d3568;--sky:#2f4468;--yel:#5a5030;--ink:#f3eaff;--card:rgba(52,44,88,.85);--sh:0 10px 30px rgba(0,0,0,.35)}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100vh;font-family:'Jua','Apple SD Gothic Neo','Malgun Gothic',sans-serif;color:var(--ink);background:linear-gradient(160deg,var(--cream),var(--pink) 55%,var(--lav));background-attachment:fixed}
+#bg{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}
+#bg i{position:absolute;font-style:normal;opacity:.7;animation:tw 4s ease-in-out infinite}
+@keyframes tw{50%{transform:translateY(-10px) scale(1.2);opacity:.25}}
+#app{position:relative;z-index:1;max-width:1000px;margin:0 auto;padding:14px 14px 90px}
+button{font:inherit;color:inherit;cursor:pointer;border:0;transition:transform .15s,box-shadow .2s,background .2s}
+button:hover{transform:translateY(-2px)}button:active{transform:scale(.93)}
+button:focus-visible,input:focus-visible{outline:3px solid var(--lav);outline-offset:2px}
+.card{background:var(--card);backdrop-filter:blur(8px);border-radius:28px;box-shadow:var(--sh);padding:16px}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:8px}
+.top h1{font-size:20px;margin:0;font-weight:400}
+.pill{background:var(--yel);color:#6b5200;border-radius:99px;padding:5px 14px;box-shadow:var(--sh)}
+.main{display:grid;gap:14px}
+@media(min-width:860px){.main{grid-template-columns:1.1fr 1fr;align-items:start}#nav{position:static!important;transform:none!important;margin-bottom:12px}}
+.room{position:relative;height:340px;border-radius:30px;overflow:hidden;box-shadow:var(--sh);border:5px solid #fff}
+.floor{position:absolute;left:0;right:0;bottom:0;height:34%}
+.win{position:absolute;left:50%;top:22px;width:110px;height:90px;margin-left:-55px;border-radius:50px 50px 14px 14px;border:5px solid #fff;overflow:hidden;cursor:pointer;z-index:1}
+.win b{position:absolute;font-weight:400;animation:fall 2s linear infinite}
+@keyframes fall{from{transform:translateY(-20px)}to{transform:translateY(100px)}}
+.furn{position:absolute;font-size:72px;line-height:1;z-index:1;filter:drop-shadow(0 4px 3px rgba(0,0,0,.12))}
+.speech{position:absolute;top:10px;left:12px;right:12px;z-index:5;text-align:center}
+.speech span{display:inline-block;background:#fff;color:#5a4a6b;border-radius:20px;padding:6px 14px;font-size:14px;box-shadow:var(--sh);animation:pop .3s}
+@keyframes pop{from{transform:scale(.7);opacity:0}}
+.pet{position:absolute;left:50%;bottom:4%;width:230px;margin-left:-115px;z-index:3;cursor:pointer}
+.pet svg{width:100%;overflow:visible}
+.a-idle{animation:hop 1.8s ease-in-out infinite}.a-happy{animation:hop .7s ease-in-out infinite}
+.a-sleepy{animation:sway 3s ease-in-out infinite}.a-eat{animation:chew .35s infinite}.a-sulky{animation:sway 5s infinite}.a-hungry{animation:shake .8s infinite}
+@keyframes hop{0%,100%{transform:translateY(0) scale(1,1)}20%{transform:scale(1.06,.92)}50%{transform:translateY(-22px) scale(.97,1.04)}80%{transform:scale(1.05,.94)}}
+@keyframes sway{50%{transform:rotate(4deg) translateY(4px)}}
+@keyframes chew{50%{transform:scale(1.04,.95)}}
+@keyframes shake{25%{transform:rotate(-3deg)}75%{transform:rotate(3deg)}}
+.blink{animation:bl 4.5s infinite;transform-box:fill-box;transform-origin:center}
+@keyframes bl{0%,95%,100%{transform:scaleY(1)}97.5%{transform:scaleY(.1)}}
+.bars{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px;margin-top:12px}
+.bar{font-size:13px}.bar div{height:12px;background:rgba(150,120,190,.18);border-radius:9px;overflow:hidden;margin-top:3px}
+.bar i{display:block;height:100%;border-radius:9px;transition:width .5s}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.btn{flex:1;min-width:76px;padding:12px 8px;border-radius:20px;background:#fff;color:#5a4a6b;box-shadow:var(--sh);font-size:15px}
+.btn:hover{background:var(--yel)}.btn.p{background:linear-gradient(135deg,#ff9ec4,#b9a3ff);color:#fff}
+.btn:disabled{opacity:.5;cursor:default}
+#nav{position:fixed;bottom:calc(10px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);display:flex;gap:4px;padding:6px;border-radius:99px;z-index:20;background:var(--card);box-shadow:var(--sh);backdrop-filter:blur(10px)}
+#nav button{background:none;padding:9px 16px;border-radius:99px;font-size:15px}
+#nav button[aria-selected=true]{background:linear-gradient(135deg,#ff9ec4,#b9a3ff);color:#fff}
+.chat{height:300px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;padding:4px}
+.m{max-width:82%;padding:9px 14px;border-radius:20px;font-size:14px;line-height:1.5;animation:pop .25s}
+.m.me{align-self:flex-end;background:linear-gradient(135deg,#ff9ec4,#b9a3ff);color:#fff;border-bottom-right-radius:6px}
+.m.pt{align-self:flex-start;background:#fff;color:#5a4a6b;border-bottom-left-radius:6px}
+input{font:inherit;flex:1;min-width:0;padding:12px 16px;border-radius:99px;border:2px solid var(--lav);background:#fff;color:#5a4a6b}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:8px}
+.it{padding:10px 4px;border-radius:20px;background:#fff;color:#5a4a6b;font-size:12px;box-shadow:var(--sh)}
+.it span{display:block;font-size:30px}.it.on{background:var(--yel)}.it.lk{opacity:.55}
+h2{font-size:16px;margin:14px 0 8px;font-weight:400}
+.dot{width:34px;height:34px;border-radius:50%;border:3px solid #fff;box-shadow:var(--sh)}
+.dot.on{outline:3px solid var(--ink)}
+.adopt{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.ad{padding:12px;border-radius:26px;background:#fff;color:#5a4a6b;box-shadow:var(--sh);text-align:center}
+.ad:hover{transform:translateY(-6px) rotate(-1deg)}
+.ad svg{width:110px}.ad small{display:block;opacity:.7;font-size:12px}
+.gm{position:relative;height:240px;border-radius:24px;background:linear-gradient(#bfe3ff,#e6d9ff);overflow:hidden;margin-top:8px}
+.gm button{position:absolute;font-size:34px;background:none;animation:pop .2s}
+.toast{position:fixed;top:calc(12px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);background:#fff;color:#5a4a6b;padding:10px 18px;border-radius:99px;box-shadow:var(--sh);z-index:50;animation:pop .3s}
+.cele{position:fixed;inset:0;z-index:40;pointer-events:none;overflow:hidden}
+.cele i{position:absolute;bottom:-40px;font-style:normal;font-size:28px;animation:up 3s ease-in forwards}
+@keyframes up{to{transform:translateY(-110vh) rotate(40deg)}}
+.bd{display:inline-block;margin:3px;padding:5px 12px;border-radius:99px;background:#fff;font-size:13px;color:#5a4a6b}.bd.off{opacity:.4;filter:grayscale(1)}
+.ear{transform-box:fill-box;transform-origin:50% 100%;animation:ew 3.4s ease-in-out infinite}.tail{transform-box:fill-box;transform-origin:0 50%;animation:tw2 1.6s ease-in-out infinite}@keyframes ew{0%,88%,100%{transform:rotate(0)}93%{transform:rotate(-7deg)}}@keyframes tw2{50%{transform:rotate(10deg)}}
+.ty{animation:ty 1s infinite}@keyframes ty{50%{opacity:.3}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+</style></head>
+<body><div id="bg"></div><div id="app"></div>
+<script src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/htm@3.1.1/dist/htm.js"></script>
+<script>
+/* ===== 대화 모듈 (Brain) =====
+ 외부 AI 미연결: 성격별 규칙 기반 대화입니다.
+ AI를 붙이려면 Brain.reply를 async로 바꿔 "본인 서버(프록시)"를 fetch하세요. API 키는 서버에만 두세요. */
+const TITLES=['손님','주인','우리 주인','소중한 우리 주인','내 영혼의 단짝'];
+const LINES={
+rabbit:{hi:'{u}! 깡총깡총 왔구나 🐰',comfort:'으아아 🥺 {u} 오늘 고생했구나... 이리 와, 내가 꼭 안아 줄게! 💗',food:'당근 먹었지! 아삭아삭 🥕 너는?',love:'나도 나도! 귀가 쫑긋 올라갔어 💗',play:'깡총! 술래잡기 하자 🐰',hug:'폭신~ 안아 줄게 🫂',day:'오늘 있었던 일 다 들려줘! 귀 쫑긋 👂',rest:'같이 낮잠 자자, 새근새근 💤',def:'응응! 더 말해줘, 귀 쫑긋 👂'},
+cat:{hi:'흥, 왔어? …반가운 건 아니야 😼',comfort:'…누가 {u}를 힘들게 했어? 뭐, 내 옆에 있어도 돼. 골골골 🐾',food:'참치. 너한테는 안 알려줄 거지만 😼',love:'…나도. 한 번만 말할 거야 💗',play:'흥, 딱 5분만이야. 장난감 가져와 🐾',hug:'…특별히 허락할게. 골골 💗',day:'흥, 궁금하진 않은데 말해 봐 😼',rest:'햇볕 아래가 명당이야. 이리 와 😽',def:'…듣고 있어. 계속해 봐 😼'},
+bear:{hi:'어서 와, {u}! 보고 싶었곰 🐻',comfort:'아이고 {u}... 토닥토닥 🐻 곰이 꼭 안아 줄게, 푹 쉬어도 돼 💗',food:'꿀 먹었곰! 달콤해 🍯',love:'나도 {u}가 제일 좋아곰 💗',play:'좋아곰! 데굴데굴 굴러 보자 🐻',hug:'두 팔 크게 벌려서 꼬옥 🤗',day:'천천히 얘기해 줘곰. 다 들어줄게 🍯',rest:'같이 느긋하게 쉬자곰 💤',def:'그렇구나곰. 계속 말해 줘 🐻'},
+chick:{hi:'삐약! {u}다아! 🐣',comfort:'삐약… 🥺 {u} 힘들었어? 내가 폭 안아 줄게! 삐약삐약 달래 줄게 💗',food:'나는 벌레… 아니 곡식! 삐약! 너는 뭐 먹었어?? 🌾',love:'삐약! 나는 더더더 사랑해!! 💗',play:'삐약! 놀자놀자! 저건 뭐야? 이건 뭐야? 🐣',hug:'폭~ 안겼다 삐약 💛',day:'뭔데뭔데?! 궁금해 삐약!',rest:'삐약… 같이 쉴래 💤',def:'삐약? 그래서 그래서? 🐣'},
+blob:{hi:'말랑~ {u}! 오늘 구름이 너한테 인사했어 ☁️',comfort:'말랑… 🥺 {u}의 걱정을 내가 꿀꺽했어. 별빛 맛이야. 이리 와 폭신 💗',food:'어제 달 조각을 먹었어. 레모네이드 맛 🌙',love:'우주가 말랑해졌어. 나도야 💗',play:'말랑 춤추자! 지구 몰래 ☁️',hug:'몽글몽글~ 둥실 안아 줄게 ☁️',day:'그 얘기, 별들한테도 알려줘도 돼? ✨',rest:'같이 구름처럼 떠 있자 ☁️',def:'말랑? 그건 신비한 일이야 ✨'}};
+const TAG={cat:['…흥 😼','…뭐, 그렇다는 거야 🐾','골골 😽'],rabbit:['깡총 🐰','귀 쫑긋 👂','🥕'],bear:['곰~ 🐻','포근포근 🍯','🐻💗'],chick:['삐약! 🐣','삐약삐약 💛','🌾'],blob:['말랑~ ☁️','둥실 ✨','몽글몽글 ☁️']};
+const P0={cat:['…','흠, ','뭐, '],rabbit:['저, 저기… ','음, 그러니까… ','(귀가 쫑긋) '],bear:['음… ','천천히요, ','으음, '],chick:['삐약… ','저, 저기요! ','어… '],blob:['말랑… ','음… 지구의 말로 하자면, ','…']};
+const T0={cat:['(…딱히 걱정한 건 아니에요)','…흥.'],rabbit:['(수줍)','(귀가 살짝 내려갔어요)'],bear:['(느릿느릿)','…천천히요.'],chick:['삐약…','(두리번두리번)'],blob:['…말랑.','(몽글…?)']};
+const GREET0={cat:'…안녕하세요. 거기 앉아도 돼요. …가까이는 말고요.',rabbit:'저, 저기… 안녕하세요! 귀가 쫑긋하고 있어요. 이야기해도 될까요?',bear:'안녕하세요… 천천히 와도 괜찮아요. 저는 느긋한 편이에요.',chick:'삐약! 안, 안녕하세요! 궁금한 게 많은데… 물어봐도 돼요?',blob:'말랑… 안녕하세요. 저는 구름에서 온 것 같아요. 아마도요.'};
+const FOOD={rabbit:'당근 케이크',cat:'참치 간식',bear:'꿀 토스트',chick:'낟알 쿠키',blob:'별사탕'};
+const G={
+comfort:['{u}, 오늘 정말 고생했어요. 제가 옆에 있을게요 💗','그런 일이 있었군요… 많이 힘들었어요? 천천히 말해도 괜찮아요.','{u}가 힘든 건 싫어요. 오늘은 아무것도 안 해도 괜찮아요, 같이 있어요 🫂'],
+miss:['저도 보고 싶었어요! 기다리면서 {u} 생각했어요 💗','와, 왔다! 기다리는 동안 하나도 서운하지 않았어요'],
+thanks:['별말씀을요! {u}가 웃으면 저도 좋아요','고마워하지 않아도 돼요. 우린 한 팀이잖아요 ✨'],
+sorry:['괜찮아요, 하나도 안 서운해요. 와 줘서 고마워요 💗','사과 안 해도 돼요. 이리 와요!'],
+praise:['히히, 정말요? 얼굴이 뜨거워졌어요 😳','{u}가 말해 주니까 더 반짝거려요 ✨','그 말, 오늘 일기에 써 둘게요!'],
+food:['오늘은 {f}! {u}는 뭐 먹었어요?','음… {f} 먹고 싶어요. 같이 먹을래요?','방금 {f} 생각했어요. 입에 침이 고여요'],
+love:['저도 {u}가 정말 좋아요 💗','그 말 들으니까 마음이 몽글몽글해져요 ✨','헤헤, 저도 사랑해요! 자랑하고 싶어요'],
+play:['좋아요! 뭐 하고 놀까요? 놀이 탭에 별 잡기도 있어요 🎈','숨바꼭질? 술래잡기? 아니면 별 잡기! ⭐'],
+hug:['이리 와요~ 꼬옥 🫂','폭 안겼어요. 따뜻해요?'],
+day:['듣고 싶어요! 오늘 제일 기억에 남는 일이 뭐였어요?','천천히 처음부터 말해 줘요. 다 들을게요','오늘 하루 어땠어요? 점수를 준다면 몇 점쯤 줄래요?'],
+rest:['같이 쉬어요. 눈 감고 숨 크게 쉬어 봐요 💤','오늘은 일찍 쉬어도 괜찮아요. 제가 옆에 있을게요'],
+name:['제 이름은 {n}. 불러 줘서 고마워요 💗','{u}가 지어 줬어요. 마음에 쏙 들어요'],
+doing:['창밖 구경하고 있었어요. 오늘은 {w} 날씨네요','{u} 기다리고 있었어요 ✨','방을 한 바퀴 돌았어요. 쿠션이 푹신했어요'],
+joy:['우와 대단해요! 저도 같이 기뻐요 🎉','{u} 최고! 축하 파티해요 ✨'],
+bye:['잘 자요, {u}. 좋은 꿈 꿔요 🌙','다녀와요! 기다리고 있을게요 🌷'],
+hi:['안녕하세요, {u}! 오늘도 만나서 반가워요','왔네요! 보고 싶었어요'],
+q:['음… 곰곰이 생각해 볼게요. {u}는 어떻게 생각해요?','어려운 질문이네요! 같이 있으면 답이 나올 것 같아요'],
+def:['그렇군요. 그래서 기분은 어땠어요?','오… 더 말해 줘요, 궁금해요!','{u}는 그때 어떤 마음이었어요?','응응, 듣고 있어요. 계속해 줘요 ✨']};
+const RULES=[[/힘들|슬프|우울|속상|지쳐|짜증|화나|울고|무서|외로/,'comfort'],[/보고\s?싶|그리웠/,'miss'],[/고마|감사/,'thanks'],[/미안|죄송/,'sorry'],[/귀여|예뻐|예쁘|멋져|최고|똑똑/,'praise'],[/뭐\s?(먹|해먹)|먹었|배고|밥|간식/,'food'],[/사랑|좋아해/,'love'],[/놀자|놀아|게임|심심/,'play'],[/안아|안겨/,'hug'],[/잘\s?자|바이|다녀|갈게/,'bye'],[/쉬|졸려|피곤|자자/,'rest'],[/이름|누구/,'name'],[/뭐\s?해|뭐하/,'doing'],[/신나|기뻐|행복|합격|성공|칭찬/,'joy'],[/오늘|있었던|하루|학교|회사|시험|친구/,'day'],[/안녕|하이|반가|헬로/,'hi']];
+const TOPIC=/(학교|시험|친구|회사|가족|여행|게임|공부|숙제|알바|발표|면접)/;
+const pk=a=>a[Math.floor(Math.random()*a.length)];
+const casual=t=>t.replace(/안녕하세요/g,'안녕').replace(/군요/g,'구나').replace(/제가/g,'내가').replace(/저는/g,'나는').replace(/저도/g,'나도').replace(/제 /g,'내 ').replace(/요(?=[^가-힣a-zA-Z0-9]|$)/g,'');
+/* 친밀도별 말투: Lv1~2 낯가리는 존댓말, Lv3 편한 반말, Lv4~5 애정 가득 + 캐릭터 고유 대사 */
+const Brain={last:'',
+ greet(sp,lv){return lv===1?GREET0[sp]:lv===2?`안녕하세요, ${TITLES[1]}! 오늘도 와 줘서 반가워요 ${TAG[sp][0]}`:LINES[sp].hi.replace('{u}',TITLES[lv-1])},
+ reply(sp,text,x){
+ const L=x.lv,k=(RULES.find(r=>r[0].test(text))||[0,/\?|？|왜|어떻게/.test(text)?'q':'def'])[1];
+ const tp=(text.match(TOPIC)||[])[1]||'',u=TITLES[L-1],own=LINES[sp][k];
+ let t;
+ if(L>=3&&own&&Math.random()<(L>=4?.55:.25))t=own;
+ else{t=pk(G[k]);if(L>=3){t=casual(t);if(Math.random()<.7)t+=' '+pk(TAG[sp])}else{if(Math.random()<.5)t=pk(P0[sp])+t;if(Math.random()<.5)t+=' '+pk(T0[sp])}}
+ t=t.replace(/\{u\}/g,u).replace(/\{n\}/g,x.name).replace(/\{f\}/g,FOOD[sp]).replace(/\{w\}/g,x.w);
+ if(tp&&['day','comfort','def'].includes(k))t=(L>=3?`${tp} 얘기구나! `:`${tp} 이야기군요. `)+t;
+ let asked=false;
+ if(k==='hi'&&x.mem.topic&&!x.mem.asked){t+=L>=3?` 참, 저번에 말한 ${x.mem.topic} 얘기는 어떻게 됐어?`:` 저번에 말씀하신 ${x.mem.topic} 이야기는 어떻게 됐어요?`;asked=true}
+ if(x.hunger<30&&['food','def','doing','q'].includes(k))t+=L>=3?' 근데 사실 배가 조금 고파… 🍙':' 그런데 사실 배가 조금 고파요…';
+ if(x.energy<25&&k!=='rest')t+=L>=3?' (졸려서 눈이 반쯤 감겼지만 계속 들을게 😪)':' (졸리지만 계속 들을게요)';
+ if(L>=4&&Math.random()<.4)t+=' '+pk(['(너랑 있는 시간이 제일 좋아 ✨)','(비밀인데, 난 네가 오는 소리를 알아 👂)']);
+ if(L>=5&&Math.random()<.3)t+=' 영혼의 단짝이니까 💞';
+ if(L===1)t=t.replace(/\s*[\u{1F300}-\u{1FAFF}\u2728]+/gu,'');
+ if(t===Brain.last)t+=' …';Brain.last=t;
+ return{t,intent:k,topic:tp,asked}}};
+
+/* ===== 데이터 ===== */
+const SP={rabbit:{n:'토끼',c:'#fff',cc:'#ffe3ee',p:'호기심 많고 다정해요'},cat:{n:'고양이',c:'#ffd9a8',cc:'#ffc27a',p:'도도하지만 은근 애정 많아요'},bear:{n:'곰',c:'#d9b08c',cc:'#c4906a',p:'느긋하고 포근해요'},chick:{n:'병아리',c:'#fff1a0',cc:'#ffe066',p:'호기심 대장, 애교쟁이예요'},blob:{n:'말랑이',c:'#d9ccff',cc:'#bfa8ff',p:'엉뚱하고 신비로워요'}};
+const WEAR=[['ribbon','리본','🎀',0,1],['hat','밀짚모자','👒',20,1],['glass','별안경','⭐',30,2],['scarf','목도리','🧣',25,2],['crown','왕관','👑',40,3]];
+const FURN=[['bed','침대','🛏️',30,1,'left:0%;bottom:24%;fontSize:124px'],['cush','쿠션','🛋️',20,1,'right:2%;bottom:3%;fontSize:92px'],['desk','책상','📚',25,2,'left:4%;top:9%;fontSize:84px'],['plant','화분','🪴',15,1,'right:0%;bottom:24%;fontSize:104px'],['toy','장난감','🧸',15,1,'left:3%;bottom:2%;fontSize:84px']];
+const WALLS=['#ffe3ee','#e3f0ff','#fff4cc','#e8e0ff','#dff5e8'],FLOORS=['#ffd0a8','#d7c2ff','#bfe3c8','#ffc6d9'];
+const LV=[0,25,70,140,250],LVN=['처음 만난 사이','조금 친해짐','단짝 친구','가장 소중한 친구','영혼의 단짝'];
+const BADGES=[['첫 식사','🍙',s=>s.st.feed>=1],['쓰다듬기 달인','🫶',s=>s.st.pet>=10],['수다쟁이','💬',s=>s.st.chat>=10],['별 사냥꾼','🌟',s=>s.st.game>=1],['단짝','💞',s=>lvOf(s.bond)>=3],['수집가','🎁',s=>s.own.length>=5]];
+const lvOf=b=>LV.filter(x=>b>=x).length;
+const day=()=>new Date().toDateString();
+const KEY='mongmong-v2';
+const cl=v=>Math.max(0,Math.min(100,v));
+function bondUp(n,k,amt,max){if(!n.cap||n.cap.d!==day())n.cap={d:day(),pet:0,chat:0,feed:0,play:0,game:0};const g=Math.max(0,Math.min(amt,max-n.cap[k]));n.cap[k]+=g;n.bond+=g;return g}
+
+/* ===== 캐릭터 SVG ===== */
+const html=htm.bind(React.createElement);
+const PAL={rabbit:{c:'#fff8fb',cc:'#f0b3ca',bl:'#ffe0ec'},cat:{c:'#ffcf94',cc:'#e69550',bl:'#fff0dc'},bear:{c:'#dcab7e',cc:'#b9804f',bl:'#f7dec4'},chick:{c:'#ffe66d',cc:'#f2b92f',bl:'#fff6b0'},blob:{c:'#cfc0ff',cc:'#9d88ea',bl:'#ebe4ff'}};
+function Pet({sp,mood,worn}){
+ const {c,cc,bl}=PAL[sp],ink='#4a3350',b=sp==='blob',ch=sp==='chick',bear=sp==='bear';
+ const st={fill:c,stroke:cc,strokeWidth:3.5,strokeLinejoin:'round'};
+ const fy=b?12:0,hy=b?14:ch?3:0;
+ const behind={
+  rabbit:html`<g><g className="ear"><ellipse cx="66" cy="40" rx="15" ry="38" transform="rotate(-8 66 70)" ...${st}/><ellipse cx="66" cy="42" rx="7.5" ry="26" transform="rotate(-8 66 70)" fill="#ffb3cd"/></g><g className="ear" style=${{animationDelay:'-1.4s'}}><ellipse cx="136" cy="44" rx="15" ry="34" transform="rotate(20 136 74)" ...${st}/><ellipse cx="136" cy="46" rx="7.5" ry="23" transform="rotate(20 136 74)" fill="#ffb3cd"/></g><circle cx="150" cy="184" r="15" fill="#fff" stroke=${cc} strokeWidth="3.5" className="tail"/></g>`,
+  cat:html`<g><path className="tail" d="M138 180 Q192 184 186 132 Q184 114 170 120" fill="none" stroke=${cc} strokeWidth="17" strokeLinecap="round"/><path d="M138 180 Q192 184 186 132 Q184 114 170 120" fill="none" stroke=${c} strokeWidth="10" strokeLinecap="round"/>${[0,1].map(i=>html`<g key=${i} transform=${i?'translate(200 0) scale(-1 1)':''}><g className="ear"><path d="M36 92 Q28 30 62 34 Q88 42 96 66Z" ...${st}/><path d="M47 80 Q44 50 60 50 Q74 56 82 68Z" fill="#ffb3cd"/></g></g>`)}</g>`,
+  bear:html`<g>${[0,1].map(i=>html`<g key=${i} transform=${i?'translate(200 0) scale(-1 1)':''}><circle cx="52" cy="62" r="22" ...${st}/><circle cx="52" cy="64" r="11" fill=${bl}/></g>`)}</g>`,
+  chick:null,
+  blob:html`<g><path d="M100 70 L100 40" stroke=${cc} strokeWidth="4" strokeLinecap="round"/><path className="ear" d="M100 20 l4 9 10 1 -8 7 3 10 -9 -6 -9 6 3 -10 -8 -7 10 -1z" fill="#fff0a0" stroke="#f2c94c" strokeWidth="3" strokeLinejoin="round"/></g>`}[sp];
+ const eye=x=>{
+  if(mood==='sleepy')return html`<path d=${`M${x-11} 114 Q${x} 124 ${x+11} 114`} fill="none" stroke=${ink} strokeWidth="4.5" strokeLinecap="round"/>`;
+  if(mood==='eat')return html`<path d=${`M${x-11} 118 Q${x} 102 ${x+11} 118`} fill="none" stroke=${ink} strokeWidth="4.5" strokeLinecap="round"/>`;
+  if(mood==='love')return html`<path d=${`M${x} 121 C${x-17} 109 ${x-8} 98 ${x} 107 C${x+8} 98 ${x+17} 109 ${x} 121Z`} fill="#ff6f9c"/>`;
+  const sul=mood==='sulky';
+  return html`<g><g className="blink"><ellipse cx=${x} cy=${sul?116:112} rx="11" ry=${sul?9:13.5} fill=${ink}/><circle cx=${x-3.5} cy=${sul?113:106} r=${sul?3.2:4.6} fill="#fff"/>${!sul&&html`<circle cx=${x+4} cy="118" r="2.2" fill="#fff"/>`}${mood==='hungry'&&html`<ellipse cx=${x} cy="122" rx="7" ry="2.6" fill="#bfe6ff" opacity=".85"/>`}</g>${mood==='happy'&&html`<path d=${`M${x+8} 94 l1.8 4.5 4.5 1.8 -4.5 1.8 -1.8 4.5 -1.8 -4.5 -4.5 -1.8 4.5 -1.8z`} fill="#fff6a0"/>`}${sul&&html`<path d=${x<100?`M${x-12} 100 L${x+9} 107`:`M${x+12} 100 L${x-9} 107`} stroke=${ink} strokeWidth="3.5" strokeLinecap="round"/>`}</g>`;};
+ const op=['hungry','sleepy','eat'].includes(mood),big=mood==='happy'||mood==='love';
+ const M=mood==='sulky'?html`<path d="M92 134 Q96 128 100 134 Q104 128 108 134" fill="none" stroke=${ink} strokeWidth="3.5" strokeLinecap="round"/>`
+  :big?html`<path d="M90 126 Q100 146 110 126Z" fill="#ff7a9c" stroke=${ink} strokeWidth="3" strokeLinejoin="round"/>`
+  :op?html`<ellipse cx="100" cy="133" rx=${mood==='eat'?9:6} ry=${mood==='eat'?7:8} fill="#ff7a9c" stroke=${ink} strokeWidth="3"/>`
+  :html`<path d="M91 127 Q95.5 135 100 127 Q104.5 135 109 127" fill="none" stroke=${ink} strokeWidth="3.5" strokeLinecap="round"/>`;
+ const face=html`<g transform=${`translate(0 ${fy})`}>
+  <ellipse cx="46" cy="128" rx="14" ry="9" fill="#ff9db9" opacity=${mood==='sulky'?.8:.55}/><ellipse cx="154" cy="128" rx="14" ry="9" fill="#ff9db9" opacity=${mood==='sulky'?.8:.55}/>
+  ${eye(68)}${eye(132)}
+  ${bear&&html`<ellipse cx="100" cy="128" rx="23" ry="16" fill=${bl}/><ellipse cx="100" cy="121" rx="7" ry="5" fill=${ink}/>`}
+  ${(sp==='rabbit'||sp==='cat')&&html`<path d="M96 121 Q100 117 104 121 Q100 127 96 121Z" fill="#ff8fae"/>`}
+  ${ch?html`${(op||big)&&html`<ellipse cx="100" cy="132" rx="6" ry="5" fill="#ff7a9c"/>`}<path d="M91 122 Q100 116 109 122 Q100 134 91 122Z" fill="#ffa24d" stroke="#f08a2a" strokeWidth="2.5" strokeLinejoin="round"/>`:html`<g transform=${bear?'translate(0 5)':''}>${M}</g>`}
+  ${sp==='cat'&&html`<g stroke=${cc} strokeWidth="3" strokeLinecap="round"><path d="M30 118 L10 112 M30 128 L8 130 M170 118 L190 112 M170 128 L192 130"/></g>`}
+ </g>`;
+ return html`<svg viewBox="0 0 200 200" aria-hidden="true">
+ <ellipse cx="100" cy="195" rx="64" ry="7" fill="rgba(90,60,120,.16)"/>
+ ${behind}
+ ${b?html`<path d="M30 148 Q20 96 66 74 Q100 60 134 74 Q180 96 170 148 Q168 192 100 192 Q32 192 30 148Z" ...${st}/>`:html`
+  <ellipse cx="100" cy="166" rx="40" ry="30" ...${st}/><ellipse cx="100" cy="172" rx="24" ry="18" fill=${bl}/>
+  <ellipse cx="56" cy="164" rx="10" ry="16" transform="rotate(22 56 164)" ...${st} fill=${ch?cc:c}/><ellipse cx="144" cy="164" rx="10" ry="16" transform="rotate(-22 144 164)" ...${st} fill=${ch?cc:c}/>
+  <ellipse cx="72" cy="192" rx="17" ry="9" ...${st} fill=${ch?'#ffa24d':c}/><ellipse cx="128" cy="192" rx="17" ry="9" ...${st} fill=${ch?'#ffa24d':c}/>
+  <ellipse cx="100" cy="108" rx=${ch?72:77} ry="62" ...${st}/>`}
+ ${b&&html`<ellipse cx="72" cy="192" rx="15" ry="7" fill=${cc}/><ellipse cx="128" cy="192" rx="15" ry="7" fill=${cc}/>`}
+ <ellipse cx=${b?64:68} cy=${b?96:76} rx="18" ry="8" fill="#fff" opacity=".5" transform=${`rotate(-22 ${b?64:68} ${b?96:76})`}/>
+ ${sp==='cat'&&html`<path d="M90 56 L90 70 M100 52 L100 68 M110 56 L110 70" stroke="#e69550" strokeWidth="4.5" strokeLinecap="round"/>`}
+ ${ch&&html`<g fill="#ffd23f" stroke=${cc} strokeWidth="2"><ellipse cx="90" cy="44" rx="5" ry="11" transform="rotate(-28 90 44)"/><ellipse cx="100" cy="40" rx="5" ry="12"/><ellipse cx="110" cy="44" rx="5" ry="11" transform="rotate(28 110 44)"/></g>`}
+ ${face}
+ ${mood==='eat'&&html`<g transform="translate(100 156)"><path d="M-14 10 Q0 -20 14 10Z" fill="#fff" stroke="#e1d6f0" strokeWidth="2.5" strokeLinejoin="round"/><rect x="-6" y="1" width="12" height="9" rx="2" fill="#3b3b4f"/></g>`}
+ ${mood==='sleepy'&&html`<text x="152" y="52" fontSize="22" fill="#8f7ac8">z</text><text x="166" y="32" fontSize="16" fill="#8f7ac8">z</text>`}
+ ${worn.scarf&&html`<g transform=${`translate(0 ${fy})`} strokeLinejoin="round"><path d="M56 150 Q100 174 144 150 L149 166 Q100 190 51 166Z" fill="#ff8fa8" stroke="#e0607f" strokeWidth="2.5"/><path d="M70 160 L66 176 M88 166 L84 182 M106 168 L102 184 M124 164 L120 180" stroke="#fff" strokeWidth="5" opacity=".55" strokeLinecap="round"/><path d="M60 156 Q100 178 140 156" fill="none" stroke="#ffc2d0" strokeWidth="2.5" strokeLinecap="round" strokeDasharray="1 7"/><rect x="118" y="160" width="20" height="32" rx="8" fill="#ff8fa8" stroke="#e0607f" strokeWidth="2.5"/><path d="M122 172 H134 M122 180 H134" stroke="#fff" strokeWidth="4" opacity=".55"/><path d="M122 192 v6 M128 192 v7 M134 192 v6" stroke="#e0607f" strokeWidth="2.5" strokeLinecap="round"/></g>`}
+ ${worn.glass&&html`<g transform=${`translate(0 ${fy})`} strokeLinejoin="round">${[-8,56].map((d,i)=>html`<g key=${i} transform=${`translate(${d} 1)`}><path d="M76 90 l6 11 12 1 -9 8 3 12 -12 -6 -11 6 3 -12 -9 -8 12 -1z" fill="rgba(255,244,160,.55)" stroke="#ffb400" strokeWidth="3.5"/><path d="M71 101 l2 4 4 .5" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"/><circle cx="76" cy="111" r="3" fill="#fff" opacity=".8"/></g>`)}<path d="M88 106 Q100 100 112 106" fill="none" stroke="#ffb400" strokeWidth="3.5" strokeLinecap="round"/><path d="M30 106 L50 108 M170 106 L150 108" stroke="#ffb400" strokeWidth="3.5" strokeLinecap="round"/></g>`}
+ <g transform=${`translate(0 ${hy})`}>
+ ${worn.hat&&html`<g strokeLinejoin="round"><ellipse cx="100" cy="56" rx="58" ry="12" fill="#ffd98a" stroke="#d9983a" strokeWidth="3"/><path d="M44 56 Q100 68 156 56" fill="none" stroke="#fff3c4" strokeWidth="2.5" opacity=".7"/><path d="M66 54 Q66 20 100 20 Q134 20 134 54Z" fill="#ffe7aa" stroke="#d9983a" strokeWidth="3"/><path d="M72 46 Q100 52 128 46 M70 36 Q100 42 130 36 M78 27 Q100 31 122 27" fill="none" stroke="#e8b45a" strokeWidth="2" opacity=".7"/><path d="M66 50 Q100 58 134 50 L134 42 Q100 50 66 42Z" fill="#ff8fa8" stroke="#e0607f" strokeWidth="2"/><g transform="translate(122 46)"><circle cy="-6" r="5" fill="#fff"/><circle cx="6" r="5" fill="#fff"/><circle cy="6" r="5" fill="#fff"/><circle cx="-6" r="5" fill="#fff"/><circle r="4" fill="#ffd34d"/></g></g>`}
+ ${worn.crown&&html`<g strokeLinejoin="round"><path d="M66 62 L68 28 L86 46 L100 20 L114 46 L132 28 L134 62Z" fill="#ffd34d" stroke="#d99a00" strokeWidth="3"/><path d="M66 62 Q100 70 134 62 L134 54 Q100 62 66 54Z" fill="#ffb800" stroke="#d99a00" strokeWidth="2.5"/><path d="M76 40 L79 52 M100 30 L100 40" stroke="#fff3a8" strokeWidth="3" strokeLinecap="round" opacity=".8"/><circle cx="68" cy="26" r="5" fill="#fff" stroke="#d99a00" strokeWidth="2"/><circle cx="100" cy="17" r="5.5" fill="#fff" stroke="#d99a00" strokeWidth="2"/><circle cx="132" cy="26" r="5" fill="#fff" stroke="#d99a00" strokeWidth="2"/><path d="M100 38 l6 8 -6 8 -6 -8z" fill="#ff6f9c" stroke="#d94d7a" strokeWidth="2"/><circle cx="78" cy="59" r="3.5" fill="#7fd6ff"/><circle cx="122" cy="59" r="3.5" fill="#7fd6ff"/></g>`}
+ ${worn.ribbon&&html`<g strokeLinejoin="round"><path d="M144 56 L172 38 Q178 56 172 76Z" fill="#ff7aa5" stroke="#e0507f" strokeWidth="2.5"/><path d="M144 56 L116 38 Q110 56 116 76Z" fill="#ff7aa5" stroke="#e0507f" strokeWidth="2.5"/><path d="M144 58 L130 84 L138 82 L142 90Z" fill="#ff9dbd" stroke="#e0507f" strokeWidth="2"/><path d="M144 58 L158 84 L150 82 L146 90Z" fill="#ff9dbd" stroke="#e0507f" strokeWidth="2"/><g fill="#fff" opacity=".85"><circle cx="124" cy="52" r="2.5"/><circle cx="164" cy="52" r="2.5"/><circle cx="120" cy="62" r="2"/><circle cx="168" cy="62" r="2"/></g><circle cx="144" cy="57" r="8" fill="#ff5f8f" stroke="#e0507f" strokeWidth="2.5"/><circle cx="141" cy="54" r="2.5" fill="#fff" opacity=".8"/></g>`}
+ </g></svg>`;}
+
+const {useState,useEffect,useRef,useCallback}=React;
+
+/* ===== 상태 ===== */
+const fresh=(sp,name)=>({sp,name,born:Date.now(),hunger:70,joy:70,energy:80,bond:0,coins:30,own:['ribbon'],worn:{},wall:0,floor:0,placed:[],weather:0,last:Date.now(),gift:'',diary:[],dayKey:day(),today:{feed:0,pet:0,play:0,chat:0},st:{feed:0,pet:0,play:0,chat:0,game:0},lvSeen:1,cap:{d:day(),pet:0,chat:0,feed:0,play:0,game:0},mem:{topic:'',asked:true}});
+function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(!s||!SP[s.sp])return null;
+ const m=Math.max(0,Math.min(480,(Date.now()-s.last)/60000));
+ s.hunger=Math.max(Math.min(s.hunger,25),s.hunger-m*.2);s.joy=Math.max(Math.min(s.joy,30),s.joy-m*.12);s.energy=Math.min(100,s.energy+(m>60?m*.1:-m*.05));
+ if(s.dayKey!==day()){s.diary=[{d:s.dayKey,t:diaryText(s)},...s.diary].slice(0,14);s.dayKey=day();s.today={feed:0,pet:0,play:0,chat:0}}
+ s.last=Date.now();s.cap=s.cap||{d:'',pet:0,chat:0,feed:0,play:0,game:0};s.mem=s.mem||{topic:'',asked:true};return s}catch(e){return null}}
+const END={cat:'냐옹!',rabbit:'깡총!',bear:'곰곰~!',chick:'삐약!',blob:'말랑~!'},END0={cat:'…냥.',rabbit:'(귀 쫑긋)',bear:'(느릿)',chick:'삐약…',blob:'말랑…'};
+function diaryText(s){const t=s.today,L=lvOf(s.bond),e=END[s.sp]||'',a=[],n=t.feed+t.pet+t.play+t.chat;
+ if(L<3){const z=END0[s.sp];if(t.feed)a.push(`간식을 ${t.feed}번 먹었어요.`);if(t.pet)a.push('쓰다듬어 주셔서 조금 놀랐지만 싫지 않았어요.');if(t.play)a.push(`같이 ${t.play}번 놀았어요. 생각보다 즐거웠어요.`);if(t.chat)a.push(`이야기를 ${t.chat}마디 나눴어요.`);
+  return a.length?a.join(' ')+' 내일도 와 주실까요? '+z:`오늘은 조용히 지냈어요. ${z}`}
+ if(t.feed)a.push(`맛있는 간식을 ${t.feed}번 먹었다 ${e}`);
+ if(t.pet)a.push(`쓰다듬을 ${t.pet}번 받아서 기분이 몽글몽글했다 ${e}`);
+ if(t.play)a.push(`신나게 ${t.play}번이나 놀았다 ${e}`);
+ if(t.chat)a.push(`주인이랑 ${t.chat}마디나 수다 떨었다 ${e}`);
+ const end=L>=4?['오늘도 주인이 제일 좋았다 💗','주인 생각을 하면 이불보다 포근하다 ☁️','내일도 그다음 날도 주인이랑 있고 싶다 ✨'][n%3]:['오늘은 별 다섯 개짜리 하루였다 ✨','내일도 주인이랑 놀고 싶다 💗','자기 전에 폭신한 이불 생각을 했다 ☁️'][n%3];
+ return a.length?a.join(' ')+' '+end:`오늘은 창밖만 멍~ 하니 구경했다 ${e} 내일은 주인이 놀러 와 줄까? 🌷`}
+const moodOf=s=>s.hunger<30?'hungry':s.energy<25?'sleepy':s.joy<35?'sulky':s.joy>72?'happy':'idle';
+const SAY={hungry:['배에서 꼬르륵 소리가 나… 🍙','맛있는 냄새가 나는 것 같아!'],sleepy:['후아암~ 졸려… 😪','눈이 스르르 감겨…'],sulky:['흥, 조금 삐졌어요… 놀아주면 풀릴지도? 😤','시무룩… 안아 줄래?'],happy:['눈이 반짝반짝 ✨ 행복해!','오늘 최고의 날이야 💗'],idle:['뭐 하고 놀까?','옆에 있어서 좋아 🌷']};
+
+function App(){
+ const [S,setS]=useState(load),[tab,setTab]=useState('home'),[act,setAct]=useState(null),[say,setSay]=useState(''),[toast,setToast]=useState(''),[cele,setCele]=useState(false);
+ const [msgs,setMsgs]=useState([]),[inp,setInp]=useState(''),[typing,setTyping]=useState(false);
+ const sr=useRef(S),petAt=useRef(0),chatAt=useRef(0);sr.current=S;
+ const up=useCallback(f=>setS(p=>{const n=JSON.parse(JSON.stringify(p));f(n);n.bond=Math.max(p.bond,n.bond);n.hunger=cl(n.hunger);n.joy=cl(n.joy);n.energy=cl(n.energy);
+  const l=lvOf(n.bond);if(l>n.lvSeen){n.lvSeen=l;setTimeout(()=>{setCele(true);setToast(`친밀도 ${l}단계! ${LVN[l-1]} 🎉`);setTimeout(()=>setCele(false),3200)},0)}
+  return n}),[]);
+ useEffect(()=>{if(S){try{localStorage.setItem(KEY,JSON.stringify({...S,last:Date.now()}))}catch(e){}}},[S]);
+ useEffect(()=>{if(!toast)return;const t=setTimeout(()=>setToast(''),2600);return()=>clearTimeout(t)},[toast]);
+ useEffect(()=>{if(!S)return;const t=setInterval(()=>up(n=>{n.hunger-=1.2;n.joy-=.6;n.energy-=.3}),30000);return()=>clearInterval(t)},[!!S]);
+ useEffect(()=>{if(!S)return;const t=setInterval(()=>{if(Math.random()<.3){const e=['창밖에서 나비가 손을 흔들었어요 🦋','반짝이는 단추를 주웠어요 ✨','몰래 춤을 췄어요 🎶'];setToast(e[Math.floor(Math.random()*3)]+' (+3 코인)');up(n=>{n.coins+=3})}},45000);return()=>clearInterval(t)},[!!S]);
+ useEffect(()=>{if(S)setSay(SAY[moodOf(S)][0])},[!!S]);
+ useEffect(()=>{const b=document.getElementById('bg');b.innerHTML=Array.from({length:22},(_,i)=>`<i style="left:${(i*47)%100}%;top:${(i*29+7)%100}%;font-size:${12+i%4*6}px;animation-delay:${i%5}s">${['✦','♡','☁️','✧'][i%4]}</i>`).join('')},[]);
+
+ if(!S)return html`<${Adopt} onPick=${(sp,n)=>setS(fresh(sp,n))}/>`;
+ const lv=lvOf(S.bond),mood=act||moodOf(S),worn={};WEAR.forEach(w=>{if(S.worn[w[0]])worn[w[0]]=1});
+ const flash=(a,t,ms=1800)=>{setAct(a);setSay(t);setTimeout(()=>setAct(null),ms)};
+ const pick=a=>a[Math.floor(Math.random()*a.length)];
+ const feed=()=>{if(S.hunger>92)return setSay('배가 빵빵해서 더는 못 먹겠어요 🍙');up(n=>{if(n.hunger<70)bondUp(n,'feed',2,6);n.hunger+=30;n.joy+=4;n.st.feed++;n.today.feed++});flash('eat',pick(['냠냠냠! 너무 맛있어 😋','쩝쩝… 볼이 빵빵해졌어!']),2200)};
+ const pet=()=>{const now=Date.now();if(now-petAt.current<5000)return flash('happy',pick(['지금도 충분히 행복해! 조금 있다가 또 해줘 😊','포근포근~ 마음이 가득 찼어 ☁️']),1200);petAt.current=now;up(n=>{if(n.joy<95)n.joy+=6;bondUp(n,'pet',1,10);n.st.pet++;n.today.pet++});flash('love',pick(['헤헤 간질간질~ 💗','더 쓰다듬어 줘~ ✨','기분이 몽글몽글해!']),1400)};
+ const play=()=>{if(S.energy<15)return flash('sleepy','후아암… 조금 쉬었다 놀자 😪');up(n=>{n.joy+=16;n.energy-=12;n.hunger-=8;bondUp(n,'play',3,12);n.coins+=2;n.st.play++;n.today.play++});flash('happy','와아~ 신난다! 🎈',2400)};
+ const sleep=()=>{if(S.energy>80)return setSay('아직 안 졸려요! 조금 더 놀다가 자자 🌙');flash('sleepy','쿨쿨… 💤',3200);up(n=>{n.energy+=40})};
+ const send=t=>{t=t.trim();if(!t||typing)return;setInp('');setMsgs(m=>[...m,{me:1,t}]);setTyping(true);const ok=Date.now()-chatAt.current>3000;chatAt.current=Date.now();
+  up(n=>{if(ok){bondUp(n,'chat',1,12);n.joy+=2}n.st.chat++;n.today.chat++});
+  setTimeout(()=>{const c=sr.current,r=Brain.reply(c.sp,t,{lv:lvOf(c.bond),name:c.name,hunger:c.hunger,energy:c.energy,mem:c.mem,w:['맑은','비 오는','눈 오는','흐린'][c.weather]});
+   setTyping(false);setMsgs(m=>[...m,{t:r.t}]);setSay(r.t.slice(0,40));up(n=>{if(r.topic)n.mem={topic:r.topic,asked:false};if(r.asked)n.mem.asked=true});
+   if(['comfort','love','hug','praise','miss'].includes(r.intent)){setAct('love');setTimeout(()=>setAct(null),1800)}},600+Math.random()*700)};
+ const buy=(list,id,cost)=>up(n=>{if(!n.own.includes(id)){if(n.coins<cost){setToast('코인이 조금 모자라요 🪙');return}n.coins-=cost;n.own.push(id);setToast('새 아이템을 얻었어요 🎁')}return n});
+ const wear=id=>up(n=>{n.worn[id]=!n.worn[id]});
+ const place=id=>up(n=>{n.placed=n.placed.includes(id)?n.placed.filter(x=>x!==id):[...n.placed,id]});
+ const cp=S.cap&&S.cap.d===day()?S.cap:{pet:0,chat:0,feed:0,play:0,game:0},tot=cp.pet+cp.chat+cp.feed+cp.play+cp.game;
+ const night=new Date().getHours()<6||new Date().getHours()>=19,W=['☀️','🌧️','❄️','☁️'][S.weather];
+ const days=Math.floor((Date.now()-S.born)/864e5)+1;
+ const winBg=night?'linear-gradient(#2b2a5e,#5a4a9e)':S.weather===1||S.weather===3?'linear-gradient(#b8c6dd,#dfe6f0)':'linear-gradient(#a8dcff,#e8f6ff)';
+ const nxt=LV[lv]||null,bp=nxt?(S.bond-LV[lv-1])/(nxt-LV[lv-1])*100:100;
+ const room=html`<div className="room" style=${{background:S.wall===-1?'#fff':WALLS[S.wall]}}>
+  <div className="win" style=${{background:winBg}} onClick=${()=>up(n=>{n.weather=(n.weather+1)%4})} title="창문을 눌러 날씨 바꾸기" role="button" aria-label="창밖 날씨 바꾸기">
+   <span style=${{position:'absolute',left:8,top:6,fontSize:night?20:30}}>${night?'🌙':W}</span>
+   ${S.weather===1&&Array.from({length:6},(_,i)=>html`<b key=${i} style=${{left:10+i*16,animationDelay:i*.3+'s'}}>💧</b>`)}
+   ${S.weather===2&&Array.from({length:6},(_,i)=>html`<b key=${i} style=${{left:10+i*16,animationDelay:i*.3+'s'}}>❄️</b>`)}
+  </div>
+  <div className="floor" style=${{background:FLOORS[S.floor]}}/>
+  ${FURN.filter(f=>S.placed.includes(f[0])).map(f=>html`<div key=${f[0]} className="furn" style=${Object.fromEntries(f[5].split(';').map(x=>x.split(':')))}>${f[2]}</div>`)}
+  <div className="speech"><span key=${say}>${say}</span></div>
+  <div className=${'pet a-'+(mood==='love'?'happy':mood)} onClick=${pet} role="button" tabIndex="0" aria-label="쓰다듬기" onKeyDown=${e=>e.key==='Enter'&&pet()}><${Pet} sp=${S.sp} mood=${mood} worn=${worn}/></div>
+  ${night&&html`<div style=${{position:'absolute',inset:0,background:'rgba(40,30,90,.28)',pointerEvents:'none',zIndex:4}}/>`}
+ </div>`;
+ const Bar=(l,v,c)=>html`<div className="bar">${l} ${Math.round(v)}<div><i style=${{width:v+'%',background:c}}/></div></div>`;
+ return html`<div>
+  ${toast&&html`<div className="toast" key=${toast}>${toast}</div>`}
+  ${cele&&html`<div className="cele">${Array.from({length:30},(_,i)=>html`<i key=${i} style=${{left:(i*37)%100+'%',animationDelay:(i%8)*.2+'s'}}>${['💗','✨','⭐','💖'][i%4]}</i>`)}</div>`}
+  <div className="top"><h1>🌷 ${S.name}와 ${days}일째</h1><div className="pill">🪙 ${S.coins}</div></div>
+  <div id="nav" role="tablist">${[['home','🏠 돌보기'],['chat','💬 대화'],['style','🎀 꾸미기'],['fun','🎁 놀이']].map(([k,l])=>html`<button key=${k} role="tab" aria-selected=${tab===k} onClick=${()=>setTab(k)}>${l}</button>`)}</div>
+  <div className="main">
+   <div>${room}
+    <div className="card" style=${{marginTop:12}}>
+     <div style=${{display:'flex',justifyContent:'space-between'}}><span>💞 ${LVN[lv-1]} (Lv.${lv})</span><span>${TITLES[lv-1]}</span></div>
+     <div className="bar"><div><i style=${{width:bp+'%',background:'linear-gradient(90deg,#ff9ec4,#b9a3ff)'}}/></div></div>
+     <div className="bars">${Bar('🍙 배고픔(배부름)',S.hunger,'#ffb27a')}${Bar('💗 행복도',S.joy,'#ff8fb8')}${Bar('⚡ 에너지',S.energy,'#7fd6b0')}${Bar('🫶 친밀도',Math.min(100,bp),'#b9a3ff')}</div><p style=${{fontSize:12,opacity:.7,margin:'10px 0 0'}}>오늘 쌓은 마음 ${tot}/44 · 하루에 조금씩, 천천히 가까워져요 🌷</p>
+    </div>
+   </div>
+   <div className="card">
+    ${tab==='home'&&html`<h2>${S.name}에게 해주기</h2><div className="row">
+      <button className="btn p" onClick=${feed}>🍙 먹이주기</button><button className="btn p" onClick=${pet}>🫶 쓰다듬기</button>
+      <button className="btn p" onClick=${play}>🎈 놀아주기</button><button className="btn" onClick=${sleep}>🌙 재우기</button></div>
+      <p style=${{fontSize:14,opacity:.8,lineHeight:1.6}}>${SP[S.sp].n} · ${SP[S.sp].p}.<br/>오랜만에 와도 괜찮아요. ${S.name}는 언제나 느긋하게 기다려요 🌷</p>`}
+    ${tab==='chat'&&html`<div style=${{display:'flex',gap:10,alignItems:'center'}}><div style=${{width:54}}><${Pet} sp=${S.sp} mood=${mood==='eat'?'happy':mood} worn=${{}}/></div><div><b style=${{fontWeight:400}}>${S.name}</b><div style=${{fontSize:12,opacity:.7}}>기본 대화 모드 · 외부 AI 미연결(성격별 규칙 대화)</div></div></div>
+     <${Chat} msgs=${msgs} first=${Brain.greet(S.sp,lv)} typing=${typing}/>
+     <div className="row" style=${{marginTop:8}}>${['안아 줘','놀자!','오늘 있었던 일','사랑해 💗','같이 쉬자'].map(q=>html`<button key=${q} className="btn" style=${{flex:'0 0 auto',padding:'8px 12px',fontSize:13}} disabled=${typing} onClick=${()=>send(q)}>${q}</button>`)}</div>
+     <form className="row" onSubmit=${e=>{e.preventDefault();send(inp)}}><input value=${inp} onChange=${e=>setInp(e.target.value)} placeholder="말을 걸어보세요" aria-label="메시지"/><button className="btn p" style=${{flex:'0 0 auto'}} type="submit">보내기</button></form><p style=${{fontSize:12,opacity:.7,margin:'8px 0 0'}}>오늘 대화로 쌓은 마음 ${cp.chat}/12 · 더 얘기해도 괜찮아요, 천천히 쌓여요</p>`}
+    ${tab==='style'&&html`<h2>옷과 액세서리</h2><div className="grid">${WEAR.map(([id,n,ic,cost,need])=>{const o=S.own.includes(id),lk=lv<need;return html`<button key=${id} className=${'it '+(S.worn[id]?'on':'')+(lk?' lk':'')} disabled=${lk} onClick=${()=>o?wear(id):buy(WEAR,id,cost)}><span>${ic}</span>${n}<br/>${lk?'🔒 Lv.'+need:o?(S.worn[id]?'착용 중':'착용하기'):'🪙'+cost}</button>`})}</div>
+     <h2>가구와 소품</h2><div className="grid">${FURN.map(([id,n,ic,cost,need])=>{const o=S.own.includes(id),lk=lv<need;return html`<button key=${id} className=${'it '+(S.placed.includes(id)?'on':'')+(lk?' lk':'')} disabled=${lk} onClick=${()=>o?place(id):buy(FURN,id,cost)}><span>${ic}</span>${n}<br/>${lk?'🔒 Lv.'+need:o?(S.placed.includes(id)?'놓는 중':'놓기'):'🪙'+cost}</button>`})}</div>
+     <h2>벽지</h2><div className="row">${WALLS.map((c,i)=>html`<button key=${c} className=${'dot '+(S.wall===i?'on':'')} style=${{background:c}} aria-label=${'벽지 '+(i+1)} onClick=${()=>up(n=>{n.wall=i})}/>`)}</div>
+     <h2>바닥</h2><div className="row">${FLOORS.map((c,i)=>html`<button key=${c} className=${'dot '+(S.floor===i?'on':'')} style=${{background:c}} aria-label=${'바닥 '+(i+1)} onClick=${()=>up(n=>{n.floor=i})}/>`)}</div>`}
+    ${tab==='fun'&&html`<${Fun} S=${S} up=${up} setToast=${setToast} lv=${lv}/>`}
+   </div>
+  </div></div>`;}
+
+function Chat({msgs,first,typing}){const r=useRef();useEffect(()=>{r.current.scrollTop=1e5},[msgs,typing]);
+ return html`<div className="chat" ref=${r}><div className="m pt">${first}</div>${msgs.map((m,i)=>html`<div key=${i} className=${'m '+(m.me?'me':'pt')}>${m.t}</div>`)}${typing&&html`<div className="m pt ty">…</div>`}</div>`}
+
+function Fun({S,up,setToast}){
+ const [g,setG]=useState(null),[stars,setStars]=useState([]),sc=useRef(0);
+ const can=S.gift!==day(),left=3-(S.cap&&S.cap.d===day()?(S.cap.gp||0):0);
+ const open=()=>{const c=5+Math.floor(Math.random()*8);up(n=>{n.gift=day();n.coins+=c;n.joy+=10});setToast(`선물 상자에서 코인 ${c}개가 나왔어요 🎁`)};
+ useEffect(()=>{if(!g)return;let id=0,t=g.t;const sp=setInterval(()=>setStars(s=>[...s.filter(x=>Date.now()-x.at<1600),{id:id++,at:Date.now(),x:Math.random()*80+4,y:Math.random()*70+4}]),550);
+  const tk=setInterval(()=>{t--;setG(p=>p&&{...p,t});if(t<=0){clearInterval(sp);clearInterval(tk);setG(null);setStars([]);const c=sc.current;up(n=>{n.coins+=c;n.joy+=8;bondUp(n,'game',2,4);n.st.game++});setToast(`별 ${c}개를 모았어요! +${c} 코인 ⭐`)}},1000);
+  return()=>{clearInterval(sp);clearInterval(tk)}},[!!g]);
+ return html`<h2>오늘의 선물 상자</h2>
+  <button className="btn p" style=${{width:'100%'}} disabled=${!can} onClick=${open}>${can?'🎁 선물 열기':'오늘 선물은 받았어요 (내일 또 만나요)'}</button>
+  <h2>별 잡기 미니게임</h2>
+  ${g?html`<div>남은 시간 ${g.t}초 · 모은 별 ${g.s}</div>`:html`<button className="btn" style=${{width:'100%'}} disabled=${left<=0} onClick=${()=>{up(n=>{if(!n.cap||n.cap.d!==day())n.cap={d:day(),pet:0,chat:0,feed:0,play:0,game:0};n.cap.gp=(n.cap.gp||0)+1});sc.current=0;setG({t:10,s:0})}}>${left>0?'⭐ 10초 동안 별 잡기 (오늘 '+left+'회 남음)':'⭐ 오늘 별 잡기는 끝! 내일 또 만나요'}</button>`}
+  ${g&&html`<div className="gm">${stars.map(s=>html`<button key=${s.id} style=${{left:s.x+'%',top:s.y+'%'}} aria-label="별" onClick=${()=>{sc.current++;setG(p=>({...p,s:p.s+1}));setStars(a=>a.filter(x=>x.id!==s.id))}}>⭐</button>`)}</div>`}
+  <h2>오늘의 일기</h2><div className="m pt" style=${{maxWidth:'100%'}}>📖 ${diaryText(S)}</div>
+  ${S.diary.slice(0,3).map((d,i)=>html`<div key=${i} style=${{fontSize:12,opacity:.7,marginTop:6}}>${d.d} · ${d.t}</div>`)}
+  <h2>업적 배지</h2>${BADGES.map(([n,ic,f])=>html`<span key=${n} className=${'bd '+(f(S)?'':'off')}>${ic} ${n}</span>`)}`}
+
+function Adopt({onPick}){
+ const [sp,setSp]=useState('chick'),[name,setName]=useState('');
+ return html`<div style=${{textAlign:'center'}}><h1 style=${{fontWeight:400,fontSize:28,margin:'24px 0 4px'}}>몽글몽글 반려 친구 🌷</h1>
+ <p>함께할 친구를 골라 입양해 주세요</p>
+ <div className="adopt">${Object.entries(SP).map(([k,v])=>html`<button key=${k} className="ad" style=${{outline:sp===k?'4px solid #b9a3ff':'none'}} onClick=${()=>setSp(k)}><${Pet} sp=${k} mood=${sp===k?'happy':'idle'} worn=${{}}/><b style=${{fontWeight:400,fontSize:18}}>${v.n}</b><small>${v.p}</small></button>`)}</div>
+ <div className="card" style=${{maxWidth:420,margin:'18px auto'}}><form className="row" style=${{marginTop:0}} onSubmit=${e=>{e.preventDefault();onPick(sp,name.trim()||SP[sp].n)}}>
+  <input value=${name} maxLength="8" onChange=${e=>setName(e.target.value)} placeholder="이름을 지어주세요" aria-label="이름"/><button className="btn p" style=${{flex:'0 0 auto'}} type="submit">입양하기 💗</button></form></div></div>`}
+
+ReactDOM.createRoot(document.getElementById('app')).render(React.createElement(App));
+</script></body></html>
